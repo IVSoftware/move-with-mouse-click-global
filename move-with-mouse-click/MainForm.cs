@@ -21,6 +21,8 @@ namespace move_with_mouse_click
                         0);
                 }
             }
+
+            // Unhook when this `Form` disposes.
             Disposed += (sender, e) => UnhookWindowsHookEx(_hook);
 
             // A little hack to keep window on top while Click-to-Move is enabled.
