@@ -30,8 +30,6 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
             // Will need to offset the title NC area for the move.
             var offset = RectangleToScreen(ClientRectangle);
             CLIENT_RECT_OFFSET = offset.Y - Location.Y;
-
-            initRichText();
         }
         readonly int CLIENT_RECT_OFFSET;
         IntPtr _hook;
