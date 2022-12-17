@@ -3,98 +3,101 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
 
 **Low-level global mouse hook**
 
-    public MainForm()
-    {
-        InitializeComponent();
-        var offset = RectangleToScreen(ClientRectangle);
-        CLIENT_RECT_OFFSET = offset.Y - Location.Y;
-        initRichText();
-        using (var process = Process.GetCurrentProcess())
+        public MainForm()
         {
-            using (var module = process.MainModule!)
+            InitializeComponent();
+            // Application.AddMessageFilter(this);
+            var offset = RectangleToScreen(ClientRectangle);
+            CLIENT_RECT_OFFSET = offset.Y - Location.Y;
+            initRichText();
+            using (var process = Process.GetCurrentProcess())
             {
-                var handle = GetModuleHandle(module.ModuleName);
-                _hook = SetWindowsHookEx(
-                    HookType.WH_MOUSE_LL,
-                    lpfn: callback,
-                    GetModuleHandle(module.ModuleName),
-                    0);
+                using (var module = process.MainModule!)
+                {
+                    var handle = GetModuleHandle(module.ModuleName);
+                    _hook = SetWindowsHookEx(
+                        HookType.WH_MOUSE_LL,
+                        lpfn: callback,
+                        GetModuleHandle(module.ModuleName),
+                        0);
+                }
+            }
+            Disposed += (sender, e) => UnhookWindowsHookEx(_hook);
+
+            // A little hack to keep window on time while Click-to-Move is enabled.
+            checkBoxEnableCTM.CheckedChanged += (sender, e) =>
+            {
+                TopMost = checkBoxEnableCTM.Checked;
+            };
+        }
+        readonly int CLIENT_RECT_OFFSET;
+        IntPtr _hook;
+        private IntPtr callback(int code, IntPtr wParam, IntPtr lParam)
+        {
+            if (code >= 0)
+            {
+                switch ((int)wParam)
+                {
+                    case WM_LBUTTONDOWN:
+                        if (checkBoxEnableCTM.Checked)
+                        {
+                            onClickToMove(MousePosition);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+            return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
+        }
+        private void onClickToMove(Point mousePosition)
+        {
+            if (checkBoxEnableCTM.ClientRectangle.Contains(checkBoxEnableCTM.PointToClient(mousePosition)))
+            {
+                // We really have to exclude this control, don't we?
+            }
+            else
+            {
+                // Try this. Offset the new `mousePosition` so that the cursor lands
+                // in the middle of the button when the move is over. This feels
+                // like a semi-intuitive motion perhaps. This means we have to
+                // subtract the relative position of the button from the new loc.
+                var clientNew = PointToClient(mousePosition);
+
+                var centerButton =
+                    new Point(
+                        checkBoxEnableCTM.Location.X + checkBoxEnableCTM.Width / 2,
+                        checkBoxEnableCTM.Location.Y + checkBoxEnableCTM.Height / 2);
+
+                var offsetToNow = new Point(
+                    mousePosition.X - centerButton.X,
+                    mousePosition.Y - centerButton.Y - CLIENT_RECT_OFFSET);
+
+                BeginInvoke(() =>
+                {
+                    Location = offsetToNow;                    
+                    richTextBox.Select(0, 0); // Cosmetic fix selection artifact
+                });
             }
         }
-        // Be sure to unhook when `Form` disposes
-        Disposed += (sender, e) => UnhookWindowsHookEx(_hook);
 
-        // A little hack to keep window on top while CTM is enabled.
-        checkBoxEnableCTM.CheckedChanged += (sender, e) =>
+        private void initRichText()
         {
-            TopMost = checkBoxEnableCTM.Checked;
-        };
-    }
-    readonly int CLIENT_RECT_OFFSET;
-    IntPtr _hook;
-    private IntPtr callback(int code, IntPtr wParam, IntPtr lParam)
-    {
-        if (code >= 0)
-        {
-            switch ((int)wParam)
-            {
-                case WM_LBUTTONDOWN:
-                    if (checkBoxEnableCTM.Checked)
-                    {
-                        onClickToMove(MousePosition);
-                    }
-                    break;
-                case WM_LBUTTONUP:
-                    // N O O P
-                    break;
-                default:
-                    break;
-            }
+            richTextBox.Rtf = 
+@"{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green187\blue77;}
+{\*\generator Riched20 10.0.22621}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\cf1\i\f0\fs24\lang9 Now with Multiscreen Support!!\cf0\i0\fs22\par
+}
+ ";
         }
-        return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
-    }
-
-***
-**Perform the Move**
-
-Using `BeginInvoke` to avoid blocking the mouse click itself, set the new main form location to the screen position of the WM_LBUTTONDOWN message;
-
-    private void onClickToMove(Point mousePosition)
-    {
-        if (checkBoxEnableCTM.ClientRectangle.Contains(checkBoxEnableCTM.PointToClient(mousePosition)))
-        {
-            // We really have to exclude this control, don't we?
-        }
-        else
-        {
-            // Try this. Offset the new `mousePosition` so that the cursor lands
-            // in the middle of the button when the move is over. This feels
-            // like a semi-intuitive motion perhaps. This means we have to
-            // subtract the relative position of the button from the new loc.
-            var clientNew = PointToClient(mousePosition);
-
-            var centerButton =
-                new Point(
-                    checkBoxEnableCTM.Location.X + checkBoxEnableCTM.Width / 2,
-                    checkBoxEnableCTM.Location.Y + checkBoxEnableCTM.Height / 2);
-
-            var offsetToNow = new Point(
-                mousePosition.X - centerButton.X,
-                mousePosition.Y - centerButton.Y - CLIENT_RECT_OFFSET);
-
-            BeginInvoke(() =>
-            {
-                Location = offsetToNow;                    
-                richTextBox.Select(0, 0); // Cosmetic fix selection artifact
-            });
-        }
-    }
 
 In the code I used to test this answer, it seemed intuitive to center the button where the click takes place. This offset is easy to change if it doesn't suit you. A screenshot doesn't really capture the behavior very well, so I've put the example up on GitHub feel free to [Clone](https://github.com/IVSoftware/move-with-mouse-click.git) it.
 
 
 [![screenshot][1]][1]
 
+**WinApi**
 
 
     #region P I N V O K E
