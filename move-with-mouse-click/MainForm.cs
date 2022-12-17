@@ -39,7 +39,7 @@ namespace move_with_mouse_click
                     Color.MediumSeaGreen;
             };
 
-            // Will need to offset the title NC area for the move.
+            // Compensate move offset with/without the title NC area.
             var offset = RectangleToScreen(ClientRectangle);
             CLIENT_RECT_OFFSET = offset.Y - Location.Y;
 
