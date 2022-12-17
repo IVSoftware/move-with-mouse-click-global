@@ -125,7 +125,7 @@ namespace move_with_mouse_click
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e); 
-            if (MouseButtons.Equals(MouseButtons.Left))
+            if (checkBoxEnableDragging.Checked && MouseButtons.Equals(MouseButtons.Left))
             {
                 var screen = PointToScreen(e.Location);
                 _mouseDelta = new Point(screen.X - _mouseDownScreen.X, screen.Y - _mouseDownScreen.Y);

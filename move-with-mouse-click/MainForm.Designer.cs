@@ -30,6 +30,7 @@
             this.richTextBox = new System.Windows.Forms.RichTextBox();
             this.buttonClose = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkBoxEnableDragging = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // checkBoxEnableCTM
@@ -53,7 +54,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.Location = new System.Drawing.Point(12, 67);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(554, 165);
+            this.richTextBox.Size = new System.Drawing.Size(554, 180);
             this.richTextBox.TabIndex = 1;
             this.richTextBox.Text = "";
             // 
@@ -71,17 +72,28 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(274, 23);
+            this.label1.Location = new System.Drawing.Point(251, 23);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(177, 25);
+            this.label1.Size = new System.Drawing.Size(201, 25);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Enable Click to Move";
+            this.label1.Text = "Enable Click to Move ->";
+            // 
+            // checkBoxEnableDragging
+            // 
+            this.checkBoxEnableDragging.AutoSize = true;
+            this.checkBoxEnableDragging.Location = new System.Drawing.Point(12, 259);
+            this.checkBoxEnableDragging.Name = "checkBoxEnableDragging";
+            this.checkBoxEnableDragging.Size = new System.Drawing.Size(170, 29);
+            this.checkBoxEnableDragging.TabIndex = 4;
+            this.checkBoxEnableDragging.Text = "Enable Dragging";
+            this.checkBoxEnableDragging.UseVisualStyleBackColor = true;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(578, 244);
+            this.ClientSize = new System.Drawing.Size(578, 300);
+            this.Controls.Add(this.checkBoxEnableDragging);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonClose);
             this.Controls.Add(this.richTextBox);
@@ -101,5 +113,6 @@
         private RichTextBox richTextBox;
         private Button buttonClose;
         private Label label1;
+        private CheckBox checkBoxEnableDragging;
     }
 }
