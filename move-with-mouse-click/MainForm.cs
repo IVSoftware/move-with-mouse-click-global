@@ -92,7 +92,7 @@ namespace move_with_mouse_click
 @"{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
 {\colortbl ;\red0\green187\blue77;}
 {\*\generator Riched20 10.0.22621}\viewkind4\uc1 
-\pard\sa200\sl276\slmult1\cf1\i\f0\fs24\lang9 Now with Multiscreen Support!!.\cf0\i0\fs22\par
+\pard\sa200\sl276\slmult1\cf1\i\f0\fs24\lang9 Now with Multiscreen Support!!\cf0\i0\fs22\par
 }
  ";
         }
