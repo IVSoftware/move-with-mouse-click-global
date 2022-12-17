@@ -53,6 +53,10 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
             }
             return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
         }
+
+***
+**Perform the move**
+
         private void onClickToMove(Point mousePosition)
         {
             if (checkBoxEnableCTM.ClientRectangle.Contains(checkBoxEnableCTM.PointToClient(mousePosition)))
@@ -84,11 +88,13 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
             }
         }
 
-In the code I used to test this answer, it seemed intuitive to center the button where the click takes place. This offset is easy to change if it doesn't suit you. A screenshot doesn't really capture the behavior very well, so I've put the example up on GitHub feel free to [Clone](https://github.com/IVSoftware/move-with-mouse-click.git) it.
+In the code I used to test this answer, it seemed intuitive to center the button where the click takes place (this offset is easy to change if it doesn't suit you). Here's the result of the multiscreen test:
 
 
-[![screenshot][1]][1]
-***
+[![Form][1]][1]
+
+[![multiscreen][2]][2]
+
 **WinApi**
 
 
@@ -112,4 +118,6 @@ In the code I used to test this answer, it seemed intuitive to center the button
     public static extern IntPtr GetModuleHandle(string lpModuleName);
     #endregion P I N V O K E
 
-  [1]: https://i.stack.imgur.com/r4b3S.png
+
+  [1]: https://i.stack.imgur.com/tLFqX.png
+  [2]: https://i.stack.imgur.com/8I2wy.jpg
