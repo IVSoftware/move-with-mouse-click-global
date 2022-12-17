@@ -3,6 +3,7 @@ using System.Drawing.Text;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace move_with_mouse_click
 {
@@ -46,15 +47,6 @@ namespace move_with_mouse_click
             buttonClose.Click += (sender, e) => Application.Exit();
             initRichText();
             initGlyphFont();
-        }
-
-        private void initGlyphFont()
-        {
-            glyphs.AddFontFile(
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts", "move.ttf")
-            );
-            checkBoxEnableCTM.Font = new Font(glyphs.Families[0], 14F);
-            checkBoxEnableCTM.Text = "\uE805";
         }
 
         readonly int CLIENT_RECT_OFFSET;
@@ -118,7 +110,56 @@ namespace move_with_mouse_click
  ";
         }
 
+
+        #region M O U S E    D R A G
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            if(!checkBoxEnableCTM.Checked) 
+            {
+                _mouseDownScreen = MousePosition;
+                _controlDownPoint = Location;
+            }
+            Cursor = Cursors.Hand;
+        }
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e); 
+            if (MouseButtons.Equals(MouseButtons.Left))
+            {
+                var screen = PointToScreen(e.Location);
+                _mouseDelta = new Point(screen.X - _mouseDownScreen.X, screen.Y - _mouseDownScreen.Y);
+                var newControlLocation = new Point(_controlDownPoint.X + _mouseDelta.X, _controlDownPoint.Y + _mouseDelta.Y);
+                if (!Location.Equals(newControlLocation))
+                {
+                    Location = newControlLocation;
+                }
+            }
+        }
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            Cursor = Cursors.Default;
+        }
+
+        Point
+            // Where's the cursor in relation to screen when mouse button is pressed?
+            _mouseDownScreen = new Point(),
+            // Where's the 'map' control when mouse button is pressed?
+            _controlDownPoint = new Point(),
+            // How much has the mouse moved from it's original mouse-down location?
+            _mouseDelta = new Point();
+        #endregion M O U S E    D R A G
+
         PrivateFontCollection glyphs = new PrivateFontCollection();
+        private void initGlyphFont()
+        {
+            glyphs.AddFontFile(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts", "move.ttf")
+            );
+            checkBoxEnableCTM.Font = new Font(glyphs.Families[0], 14F);
+            checkBoxEnableCTM.Text = "\uE805";
+        }
         #region P I N V O K E
         public enum HookType : int { WH_MOUSE = 7, WH_MOUSE_LL = 14 }
         const int WM_LBUTTONDOWN = 0x0201;
