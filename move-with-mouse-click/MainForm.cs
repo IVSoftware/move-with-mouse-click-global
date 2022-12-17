@@ -26,7 +26,7 @@ namespace move_with_mouse_click
             }
             Disposed += (sender, e) => UnhookWindowsHookEx(_hook);
 
-            // A little hack to keep window on time while CTM is enabled.
+            // A little hack to keep window on top while CTM is enabled.
             checkBoxEnableCTM.CheckedChanged += (sender, e) =>
             {
                 TopMost = checkBoxEnableCTM.Checked;
