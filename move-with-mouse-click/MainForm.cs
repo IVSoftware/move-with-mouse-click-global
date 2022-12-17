@@ -48,22 +48,17 @@ namespace move_with_mouse_click
                     case WM_LBUTTONDOWN:
                         if (checkBoxEnableCTM.Checked)
                         {
-                            onClickToMove(MousePosition);
+                            _ = onClickToMove(MousePosition);
                         }
-                        break;
-                    default:
                         break;
                 }
             }
             return CallNextHookEx(IntPtr.Zero, code, wParam, lParam);
         }
-        private void onClickToMove(Point mousePosition)
+        private async Task onClickToMove(Point mousePosition)
         {
-            if (checkBoxEnableCTM.ClientRectangle.Contains(checkBoxEnableCTM.PointToClient(mousePosition)))
-            {
-                // We really have to exclude this control, don't we?
-            }
-            else
+            // Exempt clicks that occur on the 'Enable Click to Move` button itself.
+            if (!checkBoxEnableCTM.ClientRectangle.Contains(checkBoxEnableCTM.PointToClient(mousePosition)))
             {
                 // Try this. Offset the new `mousePosition` so that the cursor lands
                 // in the middle of the button when the move is over. This feels
@@ -80,11 +75,10 @@ namespace move_with_mouse_click
                     mousePosition.X - centerButton.X,
                     mousePosition.Y - centerButton.Y - CLIENT_RECT_OFFSET);
 
-                BeginInvoke(() =>
-                {
-                    Location = offsetToNow;                    
-                    richTextBox.Select(0, 0); // Cosmetic fix selection artifact
-                });
+                // Allow the pending mouse messages to pump. 
+                await Task.Delay(TimeSpan.FromMilliseconds(1));
+                Location = offsetToNow;
+                checkBoxEnableCTM.Checked = false; // Turn off after each move.
             }
         }
 
