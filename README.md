@@ -9,7 +9,6 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
             // Application.AddMessageFilter(this);
             var offset = RectangleToScreen(ClientRectangle);
             CLIENT_RECT_OFFSET = offset.Y - Location.Y;
-            initRichText();
             using (var process = Process.GetCurrentProcess())
             {
                 using (var module = process.MainModule!)
@@ -81,22 +80,11 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
             }
         }
 
-        private void initRichText()
-        {
-            richTextBox.Rtf = 
-    @"{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
-    {\colortbl ;\red0\green187\blue77;}
-    {\*\generator Riched20 10.0.22621}\viewkind4\uc1 
-    \pard\sa200\sl276\slmult1\cf1\i\f0\fs24\lang9 Now with Multiscreen Support!!\cf0\i0\fs22\par
-    }
-     ";
-        }
-
 In the code I used to test this answer, it seemed intuitive to center the button where the click takes place. This offset is easy to change if it doesn't suit you. A screenshot doesn't really capture the behavior very well, so I've put the example up on GitHub feel free to [Clone](https://github.com/IVSoftware/move-with-mouse-click.git) it.
 
 
 [![screenshot][1]][1]
-
+***
 **WinApi**
 
 
