@@ -85,8 +85,8 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
             // Allow the pending mouse messages to pump. 
             await Task.Delay(TimeSpan.FromMilliseconds(1));
             Location = offsetToNow;
-            checkBoxEnableCTM.Checked = false; // Turn off after each move.
         }
+        checkBoxEnableCTM.Checked = false; // Turn off after each move.
     }
 
 In the code I used to test this answer, it seemed intuitive to center the button where the click takes place (this offset is easy to change if it doesn't suit you). Here's the result of the multiscreen test:

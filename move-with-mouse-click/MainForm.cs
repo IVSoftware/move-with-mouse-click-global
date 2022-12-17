@@ -1,4 +1,7 @@
 using System.Diagnostics;
+using System.Drawing.Text;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace move_with_mouse_click
@@ -8,6 +11,7 @@ namespace move_with_mouse_click
         public MainForm()
         {
             InitializeComponent();
+            FormBorderStyle = FormBorderStyle.None;
             using (var process = Process.GetCurrentProcess())
             {
                 using (var module = process.MainModule!)
@@ -29,14 +33,30 @@ namespace move_with_mouse_click
             checkBoxEnableCTM.CheckedChanged += (sender, e) =>
             {
                 TopMost = checkBoxEnableCTM.Checked;
+                checkBoxEnableCTM.ForeColor =
+                    checkBoxEnableCTM.Checked ? 
+                    Color.Salmon : 
+                    Color.MediumSeaGreen;
             };
 
             // Will need to offset the title NC area for the move.
             var offset = RectangleToScreen(ClientRectangle);
             CLIENT_RECT_OFFSET = offset.Y - Location.Y;
 
+            buttonClose.Click += (sender, e) => Application.Exit();
             initRichText();
+            initGlyphFont();
         }
+
+        private void initGlyphFont()
+        {
+            glyphs.AddFontFile(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Fonts", "move.ttf")
+            );
+            checkBoxEnableCTM.Font = new Font(glyphs.Families[0], 14F);
+            checkBoxEnableCTM.Text = "\uE805";
+        }
+
         readonly int CLIENT_RECT_OFFSET;
         IntPtr _hook;
         private IntPtr callback(int code, IntPtr wParam, IntPtr lParam)
@@ -83,8 +103,8 @@ namespace move_with_mouse_click
                 await Task.Delay(TimeSpan.FromMilliseconds(1));
                 WindowState = FormWindowState.Normal; // JIC window happens to be maximized.
                 Location = offsetToNow;
-                checkBoxEnableCTM.Checked = false; // Turn off after each move.
             }
+            checkBoxEnableCTM.Checked = false; // Turn off after each move.
         }
 
         private void initRichText()
@@ -93,11 +113,12 @@ namespace move_with_mouse_click
 @"{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
 {\colortbl ;\red0\green187\blue77;}
 {\*\generator Riched20 10.0.22621}\viewkind4\uc1 
-\pard\sa200\sl276\slmult1\cf1\i\f0\fs24\lang9 Now with Multiscreen Support!!\cf0\i0\fs22\par
+\pard\sa200\sl276\slmult1\cf1\i\f0\fs24\lang9 Borderless Form \par Multiscreen Support.\cf0\i0\fs22\par
 }
  ";
         }
 
+        PrivateFontCollection glyphs = new PrivateFontCollection();
         #region P I N V O K E
         public enum HookType : int { WH_MOUSE = 7, WH_MOUSE_LL = 14 }
         const int WM_LBUTTONDOWN = 0x0201;

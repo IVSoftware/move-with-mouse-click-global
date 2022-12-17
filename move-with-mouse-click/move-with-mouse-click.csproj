@@ -13,4 +13,10 @@
     <Folder Include="Screenshots\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Fonts\move.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
