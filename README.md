@@ -24,7 +24,7 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
             }
             Disposed += (sender, e) => UnhookWindowsHookEx(_hook);
 
-            // A little hack to keep window on time while Click-to-Move is enabled.
+            // A little hack to keep window on top while Click-to-Move is enabled.
             checkBoxEnableCTM.CheckedChanged += (sender, e) =>
             {
                 TopMost = checkBoxEnableCTM.Checked;
