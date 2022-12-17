@@ -8,19 +8,16 @@ namespace move_with_mouse_click
         public MainForm()
         {
             InitializeComponent();
-            // Application.AddMessageFilter(this);
-            var offset = RectangleToScreen(ClientRectangle);
-            CLIENT_RECT_OFFSET = offset.Y - Location.Y;
-            initRichText();
             using (var process = Process.GetCurrentProcess())
             {
                 using (var module = process.MainModule!)
                 {
-                    var handle = GetModuleHandle(module.ModuleName);
+                    var mname = module.ModuleName!;
+                    var handle = GetModuleHandle(mname);
                     _hook = SetWindowsHookEx(
                         HookType.WH_MOUSE_LL,
                         lpfn: callback,
-                        GetModuleHandle(module.ModuleName),
+                        GetModuleHandle(mname),
                         0);
                 }
             }
@@ -31,6 +28,12 @@ namespace move_with_mouse_click
             {
                 TopMost = checkBoxEnableCTM.Checked;
             };
+
+            // Will need to offset the title NC area for the move.
+            var offset = RectangleToScreen(ClientRectangle);
+            CLIENT_RECT_OFFSET = offset.Y - Location.Y;
+
+            initRichText();
         }
         readonly int CLIENT_RECT_OFFSET;
         IntPtr _hook;
