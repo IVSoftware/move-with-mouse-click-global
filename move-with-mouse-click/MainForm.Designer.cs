@@ -54,7 +54,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox.Location = new System.Drawing.Point(12, 67);
             this.richTextBox.Name = "richTextBox";
-            this.richTextBox.Size = new System.Drawing.Size(554, 180);
+            this.richTextBox.Size = new System.Drawing.Size(554, 186);
             this.richTextBox.TabIndex = 1;
             this.richTextBox.Text = "";
             // 
@@ -81,6 +81,7 @@
             // checkBoxEnableDragging
             // 
             this.checkBoxEnableDragging.AutoSize = true;
+            this.checkBoxEnableDragging.ForeColor = System.Drawing.SystemColors.WindowFrame;
             this.checkBoxEnableDragging.Location = new System.Drawing.Point(12, 259);
             this.checkBoxEnableDragging.Name = "checkBoxEnableDragging";
             this.checkBoxEnableDragging.Size = new System.Drawing.Size(121, 29);
