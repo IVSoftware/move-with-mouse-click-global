@@ -25,6 +25,12 @@ namespace move_with_mouse_click
                 }
             }
             Disposed += (sender, e) => UnhookWindowsHookEx(_hook);
+
+            // A little hack to keep window on time while CTM is enabled.
+            checkBoxEnableCTM.CheckedChanged += (sender, e) =>
+            {
+                TopMost = checkBoxEnableCTM.Checked;
+            };
         }
         readonly int CLIENT_RECT_OFFSET;
         IntPtr _hook;
@@ -77,7 +83,6 @@ namespace move_with_mouse_click
                     Location = offsetToNow;                    
                     richTextBox.Select(0, 0); // Cosmetic fix selection artifact
                 });
-                BeginInvoke(() => TopMost = true);
             }
         }
 
