@@ -1,4 +1,4 @@
-As I understand it, the desired behavior is to enable the "Click to Move" (one way or another) and then click anywhere on a multiscreen surface and have the form follow the mouse to the new position. One solution that seems to work in my brief testing is to pinvoke the [SetWindowsHookEx](http://pinvoke.net/default.aspx/user32/SetWindowsHookEx.html) to install a global low level hook for [WH_MOUSE_LL](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-hooks#wh_mouse_ll) in order to intercept `WM_LBUTTONDOWN`.
+As I understand it, the desired behavior is to enable the "Click to Move" (one way or another) and then click anywhere on a multiscreen surface and have the borderless form follow the mouse to the new position. One solution that seems to work in my brief testing is to pinvoke the WinApi [SetWindowsHookEx](http://pinvoke.net/default.aspx/user32/SetWindowsHookEx.html) to install a global low level hook for [WH_MOUSE_LL](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-hooks#wh_mouse_ll) in order to intercept `WM_LBUTTONDOWN`.
 
 **This answer has been modified in order to track updates to the question.*
 ***
@@ -31,7 +31,7 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
                 TopMost = checkBoxEnableCTM.Checked;
             };
 
-            // Will need to offset the title NC area for the move.
+            // Compensate move offset with/without the title NC area.
             var offset = RectangleToScreen(ClientRectangle);
             CLIENT_RECT_OFFSET = offset.Y - Location.Y;
         }
@@ -84,15 +84,15 @@ As I understand it, the desired behavior is to enable the "Click to Move" (one w
 
             // Allow the pending mouse messages to pump. 
             await Task.Delay(TimeSpan.FromMilliseconds(1));
-            Location = offsetToNow;
+            WindowState = FormWindowState.Normal; // JIC window happens to be maximized.
+            Location = offsetToNow;            
         }
         checkBoxEnableCTM.Checked = false; // Turn off after each move.
     }
 
 In the code I used to test this answer, it seemed intuitive to center the button where the click takes place (this offset is easy to change if it doesn't suit you). Here's the result of the multiscreen test:
 
-
-[![Form][1]][1]
+[![borderless form][1]][1]
 
 [![multiscreen][2]][2]
 
@@ -120,5 +120,5 @@ In the code I used to test this answer, it seemed intuitive to center the button
     #endregion P I N V O K E
 
 
-  [1]: https://i.stack.imgur.com/tLFqX.png
+  [1]: https://i.stack.imgur.com/pWptE.png
   [2]: https://i.stack.imgur.com/8I2wy.jpg

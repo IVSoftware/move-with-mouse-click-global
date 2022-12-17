@@ -29,9 +29,9 @@ namespace move_with_mouse_click
             // Unhook when this `Form` disposes.
             Disposed += (sender, e) => UnhookWindowsHookEx(_hook);
 
-            // A little hack to keep window on top while Click-to-Move is enabled.
             checkBoxEnableCTM.CheckedChanged += (sender, e) =>
             {
+                // A little hack to keep window on top while Click-to-Move is enabled.
                 TopMost = checkBoxEnableCTM.Checked;
                 checkBoxEnableCTM.ForeColor =
                     checkBoxEnableCTM.Checked ? 
