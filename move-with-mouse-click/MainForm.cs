@@ -81,6 +81,7 @@ namespace move_with_mouse_click
 
                 // Allow the pending mouse messages to pump. 
                 await Task.Delay(TimeSpan.FromMilliseconds(1));
+                WindowState = FormWindowState.Normal;
                 Location = offsetToNow;
                 checkBoxEnableCTM.Checked = false; // Turn off after each move.
             }
