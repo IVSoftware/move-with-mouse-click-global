@@ -83,9 +83,9 @@
             this.checkBoxEnableDragging.AutoSize = true;
             this.checkBoxEnableDragging.Location = new System.Drawing.Point(12, 259);
             this.checkBoxEnableDragging.Name = "checkBoxEnableDragging";
-            this.checkBoxEnableDragging.Size = new System.Drawing.Size(170, 29);
+            this.checkBoxEnableDragging.Size = new System.Drawing.Size(121, 29);
             this.checkBoxEnableDragging.TabIndex = 4;
-            this.checkBoxEnableDragging.Text = "Enable Dragging";
+            this.checkBoxEnableDragging.Text = "Draggable";
             this.checkBoxEnableDragging.UseVisualStyleBackColor = true;
             // 
             // MainForm
