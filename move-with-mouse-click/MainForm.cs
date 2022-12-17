@@ -41,6 +41,7 @@ namespace move_with_mouse_click
         IntPtr _hook;
         private IntPtr callback(int code, IntPtr wParam, IntPtr lParam)
         {
+            var next = IntPtr.Zero;
             if (code >= 0)
             {
                 switch ((int)wParam)
@@ -49,6 +50,9 @@ namespace move_with_mouse_click
                         if (checkBoxEnableCTM.Checked)
                         {
                             _ = onClickToMove(MousePosition);
+                            // This is a very narrow condition and the window is topmost anyway.
+                            // So probably swallow this mouse click and skip other hooks in the chain.
+                            return (IntPtr)1;
                         }
                         break;
                 }
