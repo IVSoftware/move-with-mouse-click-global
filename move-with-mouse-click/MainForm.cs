@@ -110,7 +110,6 @@ namespace move_with_mouse_click
  ";
         }
 
-
         #region M O U S E    D R A G
         protected override void OnMouseDown(MouseEventArgs e)
         {
@@ -120,7 +119,10 @@ namespace move_with_mouse_click
                 _mouseDownScreen = MousePosition;
                 _controlDownPoint = Location;
             }
-            Cursor = Cursors.Hand;
+            if (checkBoxEnableDragging.Checked)
+            {
+                Cursor = Cursors.Hand;
+            }
         }
         protected override void OnMouseMove(MouseEventArgs e)
         {
